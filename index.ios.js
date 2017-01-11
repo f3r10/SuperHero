@@ -9,44 +9,91 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Navigator,
+  TouchableHighlight
 } from 'react-native';
 
 import LoginView from './src/loginView'
 import DashboardView from './src/dashboardView'
 
+const Styles = require("./src/styles");
+
+
+// Navigation bar configuration
+var NavigationBarRouteMapper = {
+  LeftButton: function (route, navigator, index) {
+    if (route.name === 'Login' || route.name === 'List') {
+      return null;
+    }
+    return (
+      <TouchableHighlight
+        underlayColor={'rgba(0,0,0,0)'}
+        onPress={() => {
+          if (index > 0) {
+            navigator.pop();
+          }
+        }}
+      >
+        <Text style={{ marginTop: 10, marginLeft: 20, color: '#007AFF' }}>Back</Text>
+      </TouchableHighlight>
+    );
+  },
+  RightButton: function () {
+    return null;
+  },
+  Title: function (route) {
+    // Title hidden for Login view
+    if (route.name === 'Login') {
+      return null;
+    }
+    return (
+      <Text style={Styles.titleNavigator}>
+        {route.name}
+      </Text>
+    );
+  },
+};
+
 export default class SuperHero extends Component {
+
+  renderScene(route, navigator) {
+      switch (route.name) {
+        case 'Login':
+          return (
+            <LoginView navigator={navigator} route={route} />
+          );
+        case 'Dashboard':
+          return (
+            <DashboardView navigator={navigator} route={route} />
+          );
+        default:
+          return null;
+      }
+  } 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <LoginView></LoginView>
-        <DashboardView></DashboardView>
-
-      </View>
+      <Navigator
+        initialRoute={{
+          name: 'Login',
+          display: false,
+        }}
+        renderScene={this.renderScene}
+        configureScene={(route) => {
+          if (route.sceneConfig) {
+            return route.sceneConfig;
+          }
+          return Navigator.SceneConfigs.FloatFromRight;
+        }}
+        navigationBar={
+          <Navigator.NavigationBar
+            routeMapper={NavigationBarRouteMapper}
+          />}
+/>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+
 
 AppRegistry.registerComponent('SuperHero', () => SuperHero);

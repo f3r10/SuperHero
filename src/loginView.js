@@ -5,20 +5,36 @@ import {
     Text,
     AppRegistry,
     View,
+    Image,
     TouchableHighlight,
     Alert,
     StyleSheet
 } from 'react-native';
 
+const Styles = require("./styles");
+
 class loginView extends Component{
   render(){
     return(
-      <View>
-        <TouchableHighlight onPress={(this._onLogin.bind(this))} style={styles.boton}>
-          <Text style={styles.bottonText}>
-            Login
-          </Text>
-        </TouchableHighlight>
+      <View style={Styles.container}>
+        <Image style={Styles.imageContainer} source={{uri: 'https://images.unsplash.com/photo-1470082352337-75bde28b7692?dpr=2&auto=format&fit=crop&w=1500&h=2250&q=80&cs=tinysrgb&crop='}}>
+          <Text style={Styles.titleLoginText}>GET IN THE SHAPE OF YOUR LIFE</Text>  
+        </Image>
+        <View style={Styles.loginButtonContainer}>
+          <View style={Styles.inputRow}>
+            <TouchableHighlight onPress={(this._onLogin.bind(this))} style={Styles.inputButton}>
+              <Text style={Styles.bottonText}>
+                Starts now
+              </Text>
+            </TouchableHighlight>
+            <TouchableHighlight onPress={(this._onLogin.bind(this))} style={Styles.inputButton}>
+              <Text style={Styles.bottonText}>
+                Login
+              </Text>
+            </TouchableHighlight>
+          </View>
+        </View>
+        
       </View>
       )
   }
@@ -26,7 +42,7 @@ class loginView extends Component{
   _onLogin(){
     Alert.alert(
       'Acceso',
-      'Te jas logueado en el sistema',
+      'Pantalla de login',
       [
         {
           text: 'Aceptar',
@@ -42,30 +58,16 @@ class loginView extends Component{
   }
 
   _accept(){
-
+    this.props.navigator.push({
+      title: 'Dashboard',
+      name: 'Dashboard',
+      passProps: {}
+    });
   }
 
   _cancel(){
     
   }
 }
-
-const styles = StyleSheet.create({
-  boton: {
-    height:30,
-    width: 300,
-    backgroundColor: 'red',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-    marginBottom: 10,
-    borderRadius: 8,
-    borderWidth: 1
-
-  },
-  bottonText: {
-    color: 'white'
-  }
-})
 
 module.exports = loginView;
